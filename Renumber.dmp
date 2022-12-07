@@ -1,0 +1,67 @@
+00001  0000             ;
+00002  0001             ; RENUMBER A BASIC PROGRAM
+00003  0001             ;
+00004  0001             ; NOTE THIS PROGRAM ONLY RENUMBERS THE LINES THEMSELVES, GOTO, GOSUB ETC.
+00005  0001             ; ARE NOT TAKEN INTO ACCOUNT!
+00006  0001             ;
+00007  0001             *=$C000
+00008  C000             
+00009  C000             AD         = 251
+00010  C000             INC        = 255
+00011  C000             LIN        = 253
+00012  C000  A9 64                 LDA     #<100   ; LO BYTE OF STARTING LINE NUMBER
+00013  C002  85 FD                 STA     LIN
+00014  C004  A9 00                 LDA     #>100   ; HI BYTE OF STARTING LINE NUMBER
+00015  C006  85 FE                 STA     LIN+1
+00016  C008  A9 0A                 LDA     #<10    ; LO BYTE OF LINE NUMBER INCREMENT
+00017  C00A  85 FF                 STA     INC
+00018  C00C  A9 00                 LDA     #>10    ; HI BYTE OF LINE NUMBER INCREMENT
+00019  C00E  8D 00 01              STA     INC+1
+00020  C011             
+00021  C011  18                    CLC
+00022  C012  A5 2B                 LDA     43
+00023  C014  85 FB                 STA     AD
+00024  C016  A5 2C                 LDA     44
+00025  C018  85 FC                 STA     AD+1
+00026  C01A  A0 00      LOOP       LDY     #0
+00027  C01C  B1 FB                 LDA     (AD),Y
+00028  C01E  48                    PHA
+00029  C01F  C8                    INY
+00030  C020  B1 FB                 LDA     (AD),Y
+00031  C022  48                    PHA
+00032  C023  C8                    INY
+00033  C024  A5 FD                 LDA     LIN
+00034  C026  91 FB                 STA     (AD),Y
+00035  C028  C8                    INY
+00036  C029  A5 FE                 LDA     LIN+1
+00037  C02B  91 FB                 STA     (AD),Y
+00038  C02D  A5 FD                 LDA     LIN
+00039  C02F  65 FF                 ADC     INC
+00040  C031  85 FD                 STA     LIN
+00041  C033  90 03                 BCC     NXT
+00042  C035  E6 FE                 INC     LIN+1
+00043  C037  18                    CLC
+00044  C038  68         NXT        PLA
+00045  C039  85 FC                 STA     AD+1
+00046  C03B  68                    PLA
+00047  C03C  85 FB                 STA     AD
+00048  C03E  D0 DA                 BNE     LOOP
+00049  C040  A5 FC                 LDA     AD+1
+00050  C042  D0 D6                 BNE     LOOP
+00051  C044  60                    RTS
+00052  C045             
+
+******* 2 Label(s) *******
+loop = $C01A 
+nxt = $C038 
+
+******* 0 Unused label(s) *******
+
+******* 4 Variable(s) *******
+ad  = $00FB
+inc  = $00FF
+lin  = $00FD
+tgt_c64  = $0001
+******* 1 Unused variables(s) *******
+tgt_c64
+
